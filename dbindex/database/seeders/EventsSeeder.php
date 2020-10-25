@@ -10,17 +10,17 @@ class EventsSeeder extends Seeder
     public function run()
     {
         Models\Events::factory()
-            ->times(10)
+            ->times(2000)
             ->scheduled()
             ->create();
 
         Models\Events::factory()
-            ->times(3)
+            ->times(10000)
             ->sent()
             ->create();
 
         Models\Events::factory()
-            ->times(2)
+            ->times(1000)
             ->failed()
             ->create();
     }
