@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Models;
-use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Models;
 
 class WatchRepositoriesController extends Controller
 {
@@ -17,7 +16,6 @@ class WatchRepositoriesController extends Controller
         ]);
 
         $username = Str::after($request->get('profile', ''), 'https://github.com/');
-
 
         $userRepositories = Http::get("https://api.github.com/users/{$username}/repos")->json();
 
@@ -32,14 +30,30 @@ class WatchRepositoriesController extends Controller
             return !empty($counter['language']);
         })->sortBy('total');
 
+        $preferredLanguage = $preferredLanguages->last()['language'];
+
         Models\GithubProfile::firstOrCreate([
             'username' => $username,
         ], [
-            'preferred_language' => $preferredLanguages->last()['language']
+            'preferred_language' => $preferredLanguage
         ]);
 
+        $rawSuggestedRepos = Http::get("https://api.github.com/search/repositories?q={$preferredLanguage}&sort=stars&order=desc")->json();
+
+        $suggestedRepos = collect($rawSuggestedRepos['items'])->slice(0, 3)->map(function ($repo) {
+            return [
+                'full_name' => $repo['full_name'],
+                'description' => $repo['description'],
+                'license_name' => $repo['license']['name'],
+                'watchers_count' => $repo['watchers_count'],
+                'forks_count' => $repo['forks_count'],
+                'open_issues_count' => $repo['open_issues_count'],
+            ];
+        });
+
         return response()->json([
-            'message' => __('Registro realizado com sucesso')
+            'message' => __('Registro realizado com sucesso'),
+            'sugested_repositories' => $suggestedRepos
         ]);
     }
 }
