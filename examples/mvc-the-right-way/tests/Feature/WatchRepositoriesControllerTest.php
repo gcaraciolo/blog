@@ -36,13 +36,15 @@ class WatchRepositoriesControllerTest extends TestCase
 
         $response
             ->assertStatus(200)
-            ->assertJson([
+            ->assertExactJson([
                 'message' => 'Registro realizado com sucesso',
+                'preferred_language' => 'JavaScript',
                 'suggested_repositories_found' => true,
                 'suggested_repositories' => [
                     [
                         'full_name' => "freeCodeCamp/freeCodeCamp",
                         'description' => "freeCodeCamp.org's open source codebase and curriculum. Learn to code at home.",
+                        'html_url' => "https://github.com/freeCodeCamp/freeCodeCamp",
                         'license_name' => 'BSD 3-Clause "New" or "Revised" License',
                         'watchers_count' => 317064,
                         'forks_count' => 25088,
@@ -51,6 +53,7 @@ class WatchRepositoriesControllerTest extends TestCase
                     [
                         'full_name' => "vuejs/vue",
                         'description' => "🖖 Vue.js is a progressive, incrementally-adoptable JavaScript framework for building UI on the web.",
+                        'html_url' => "https://github.com/vuejs/vue",
                         'license_name' => 'MIT License',
                         'watchers_count' => 175883,
                         'forks_count' => 27335,
@@ -59,6 +62,7 @@ class WatchRepositoriesControllerTest extends TestCase
                     [
                         'full_name' => "facebook/react",
                         'description' => "A declarative, efficient, and flexible JavaScript library for building user interfaces.",
+                        'html_url' => "https://github.com/facebook/react",
                         'license_name' => 'MIT License',
                         'watchers_count' => 159743,
                         'forks_count' => 31726,
@@ -108,6 +112,7 @@ class WatchRepositoriesControllerTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'message' => 'Registro realizado com sucesso',
+                'preferred_language' => NULL,
                 'suggested_repositories_found' => false
             ]);
 

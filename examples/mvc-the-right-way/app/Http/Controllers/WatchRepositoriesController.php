@@ -46,6 +46,7 @@ class WatchRepositoriesController extends Controller
                 return [
                     'full_name' => $repo['full_name'],
                     'description' => $repo['description'],
+                    'html_url' => $repo['html_url'],
                     'license_name' => $repo['license']['name'],
                     'watchers_count' => $repo['watchers_count'],
                     'forks_count' => $repo['forks_count'],
@@ -56,6 +57,7 @@ class WatchRepositoriesController extends Controller
 
         return response()->json([
             'message' => __('Registro realizado com sucesso'),
+            'preferred_language' => $preferredLanguage,
             'suggested_repositories_found' => $suggestedRepos->count() > 0,
             'suggested_repositories' => $suggestedRepos
         ]);
