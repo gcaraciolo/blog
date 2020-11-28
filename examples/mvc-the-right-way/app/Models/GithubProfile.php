@@ -10,6 +10,7 @@ class GithubProfile extends Model
     use HasFactory;
 
     protected $fillable = [
-        'username'
+        'username',
+        'preferred_language'
     ];
 }

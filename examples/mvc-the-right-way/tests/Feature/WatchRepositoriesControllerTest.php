@@ -6,10 +6,25 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models;
+use Illuminate\Support\Facades\Http;
+use Tests\LoadFixture;
 
 class WatchRepositoriesControllerTest extends TestCase
 {
     use RefreshDatabase;
+    use LoadFixture;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $userRepos = $this->loadFixture('user-repos.json');
+
+        Http::fake([
+            'github.com/*' => Http::sequence()
+                ->push($userRepos, 200),
+        ]);
+    }
 
     public function testRegisterToWatchRepositoriesOfIntereset()
     {
@@ -23,11 +38,11 @@ class WatchRepositoriesControllerTest extends TestCase
                 'message' => 'Registro realizado com sucesso'
             ]);
 
-
-        $this->assertEquals(
-            1,
-            Models\GithubProfile::where('username', 'someprofilename')->count()
-        );
+        $this->assertDatabaseCount('github_profiles', 1);
+        $this->assertDatabaseHas('github_profiles', [
+            'username' => 'someprofilename',
+            'preferred_language' => 'JavaScript'
+        ]);
     }
 
     public function testRequiredUsernameParameter()
