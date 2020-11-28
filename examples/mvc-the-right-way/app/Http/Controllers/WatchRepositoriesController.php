@@ -32,7 +32,7 @@ class WatchRepositoriesController extends Controller
 
         $preferredLanguage = $preferredLanguages->last()['language'];
 
-        Models\GithubProfile::firstOrCreate([
+        Models\GithubProfile::updateOrCreate([
             'username' => $username,
         ], [
             'preferred_language' => $preferredLanguage
