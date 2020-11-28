@@ -17,7 +17,10 @@ class WatchRepositoriesControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+    }
 
+    public function testRegisterToWatchRepositoriesOfIntereset()
+    {
         $userRepos = $this->loadFixture('user-repos.json');
         $repos = $this->loadFixture('repos.json');
 
@@ -26,10 +29,7 @@ class WatchRepositoriesControllerTest extends TestCase
                 ->push($userRepos, 200)
                 ->push($repos, 200)
         ]);
-    }
 
-    public function testRegisterToWatchRepositoriesOfIntereset()
-    {
         $response = $this->postJson('/api/watch-repositories', [
             'profile' => 'https://github.com/someprofilename'
         ]);
@@ -38,7 +38,8 @@ class WatchRepositoriesControllerTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'message' => 'Registro realizado com sucesso',
-                'sugested_repositories' => [
+                'suggested_repositories_found' => true,
+                'suggested_repositories' => [
                     [
                         'full_name' => "freeCodeCamp/freeCodeCamp",
                         'description' => "freeCodeCamp.org's open source codebase and curriculum. Learn to code at home.",
@@ -88,5 +89,32 @@ class WatchRepositoriesControllerTest extends TestCase
                     'profile' => ['The profile field is required.']
                 ]
             ]);
+    }
+
+    public function testNoPreferredLanguageFound()
+    {
+        $userRepos = $this->loadFixture('user-repos-no-lang.json');
+
+        Http::fake([
+            'github.com/*' => Http::sequence()
+                ->push($userRepos, 200)
+        ]);
+
+        $response = $this->postJson('/api/watch-repositories', [
+            'profile' => 'https://github.com/someprofilename'
+        ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'message' => 'Registro realizado com sucesso',
+                'suggested_repositories_found' => false
+            ]);
+
+        $this->assertDatabaseCount('github_profiles', 1);
+        $this->assertDatabaseHas('github_profiles', [
+            'username' => 'someprofilename',
+            'preferred_language' => NULL
+        ]);
     }
 }

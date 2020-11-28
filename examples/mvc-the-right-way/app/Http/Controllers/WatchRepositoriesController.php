@@ -38,22 +38,26 @@ class WatchRepositoriesController extends Controller
             'preferred_language' => $preferredLanguage
         ]);
 
-        $rawSuggestedRepos = Http::get("https://api.github.com/search/repositories?q={$preferredLanguage}&sort=stars&order=desc")->json();
+        $suggestedRepos = collect([]);
+        if (!empty($preferredLanguage)) {
+            $rawSuggestedRepos = Http::get("https://api.github.com/search/repositories?q={$preferredLanguage}&sort=stars&order=desc")->json();
 
-        $suggestedRepos = collect($rawSuggestedRepos['items'])->slice(0, 3)->map(function ($repo) {
-            return [
-                'full_name' => $repo['full_name'],
-                'description' => $repo['description'],
-                'license_name' => $repo['license']['name'],
-                'watchers_count' => $repo['watchers_count'],
-                'forks_count' => $repo['forks_count'],
-                'open_issues_count' => $repo['open_issues_count'],
-            ];
-        });
+            $suggestedRepos = collect($rawSuggestedRepos['items'])->slice(0, 3)->map(function ($repo) {
+                return [
+                    'full_name' => $repo['full_name'],
+                    'description' => $repo['description'],
+                    'license_name' => $repo['license']['name'],
+                    'watchers_count' => $repo['watchers_count'],
+                    'forks_count' => $repo['forks_count'],
+                    'open_issues_count' => $repo['open_issues_count'],
+                ];
+            });
+        }
 
         return response()->json([
             'message' => __('Registro realizado com sucesso'),
-            'sugested_repositories' => $suggestedRepos
+            'suggested_repositories_found' => $suggestedRepos->count() > 0,
+            'suggested_repositories' => $suggestedRepos
         ]);
     }
 }
