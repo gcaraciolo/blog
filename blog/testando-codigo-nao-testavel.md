@@ -46,7 +46,7 @@ proxy para as outras funções e injetar essas classes/funções na classe clien
 
 Vamos ver um código para as coisas ficarem mais claras.
 
-```
+```php
 <?php
 
 class MachineSettings 
@@ -103,7 +103,7 @@ $command->handle();
 
 Pronto! A dependencia está invertida e agora é possível testar a condição `$value['local_value'] == 0` passando um stub para classe ClientCommand no ambiente de teste.
 
-```
+```php
 <?php
 
 class InvalidLocalSettingsStub implements MachineSettings 
