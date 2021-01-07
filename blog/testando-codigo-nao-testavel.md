@@ -1,3 +1,7 @@
+Se você já precisou testar uma regra de negócio e não conseguiu porque o código cliente fazia chamada para funções estáticas?
+
+Acompanha o código abaixo para entender melhor a problematica e uma solução para esse tipo de situação!
+
 ```php
 <?php
 
