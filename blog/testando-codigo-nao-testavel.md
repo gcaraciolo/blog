@@ -112,6 +112,7 @@ Pronto! A dependencia está invertida e agora é possível testar a condição `
 ```php
 <?php
 
+
 class InvalidLocalSettingsStub implements MachineSettings 
 {
     public function inipath()
@@ -131,9 +132,37 @@ class InvalidLocalSettingsStub implements MachineSettings
     }
 }
 
+
+class ValidLocalSettingsStub implements MachineSettings 
+{
+    public function inipath()
+    {
+        return '/usr/local/etc/php/7.3/php.ini';
+    }
+
+    public function phpini()
+    {
+        return [
+            'zend.assertions' => [
+                'global_value' => 1,
+                'local_value' => 1,
+                'access' => 7,
+            ]
+        ];
+    }
+}
+
 function test_invalid_zend_assertions()
 {
     $command = new ClientCommand(new InvalidLocalSettingsStub());
+    $messages = $command->handle();
+
+    my_assert(sizeof($messages) > 1, 'Configuração invalida'); 
+}
+
+function test_valid_zend_assertions()
+{
+    $command = new ClientCommand(new ValidLocalSettingsStub());
     $messages = $command->handle();
 
     my_assert(sizeof($messages) === 1, 'Configuração invalida'); 
@@ -148,5 +177,6 @@ function my_assert($assertion, $description)
 
 
 test_invalid_zend_assertions();
+test_valid_zend_assertions();
 ```
 
