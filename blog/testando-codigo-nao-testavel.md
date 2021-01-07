@@ -21,11 +21,17 @@ class ClientCommand
                 }
             }
         }
+        
+        return $messages;
     }
 }
 
 $command = new ClientCommand();
-$command->handle();
+$messages = $command->handle();
+
+foreach ($messages as $message) {
+    print_r($message . PHP_EOL);
+}
 ```
 
 **Como criar um teste automatizado para condição `$value['local_value'] == 0`?**
