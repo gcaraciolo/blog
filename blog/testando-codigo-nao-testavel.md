@@ -59,7 +59,13 @@ Vamos ver um código para as coisas ficarem mais claras.
 ```php
 <?php
 
-class MachineSettings 
+interface MachineSettings 
+{
+    public function inipath();
+    public function phpini();
+}
+
+class LocalSettings implements MachineSettings
 {
     public function inipath()
     {
@@ -107,7 +113,7 @@ class ClientCommand
     }
 }
 
-$command = new ClientCommand(new MachineSettings());
+$command = new ClientCommand(new LocalSettings());
 $command->handle();
 ```
 
