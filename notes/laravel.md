@@ -3,6 +3,6 @@
 ## Novo projeto Laravel - Dependencias e boas práticas sugeridas
 * Utilize uma ferramenta de Análise estática de código. Sugestão vimeo/psalm + psalm/plugin-laravel
 * Utilize o phpunit. phpunit/phpunit 
-* Utilize strict_types. TODO: achar uma lib que checa se todos os arquivos do projeto estão com `<?php declare(strict_types=1);`
+* Utilize strict_types. TODO: achar uma lib que checa se todos os arquivos do projeto estão com `<?php declare(strict_types=1);`. https://cs.symfony.com/
 
 Adicione github actions para rodar os testes e a análise estática de código nos PRs ou commits.
