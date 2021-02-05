@@ -1,5 +1,8 @@
 # Configurações para ambiente de desenvolvimento Laravel com XDebug no VSCode (opção de rodar com nginx)
 
+## Instalar o xdebug
+Siga os passos do wizard do xdebug. https://xdebug.org/wizard.
+Adicione as configurações abaixo.
 
 Configuração php.ini para instalar o XDebug
 ```
